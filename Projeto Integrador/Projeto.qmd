@@ -1,0 +1,84 @@
+---
+format:
+    revealjs:
+        theme: moon
+lang: pt
+title: Processos Estocátiscos I
+subtitle: "Confiabilidade de Sistemas: Falhas e Reparo"
+author:   
+  - Nielson Junior  
+  - Alisson Lucas
+  - André Werlang
+date: today
+date-format: long
+callout-icon: false
+logo: includes/logo.png
+echo: false
+self-contained-math: true
+embed-resources: true
+cache: false
+---
+
+# Introdução
+
+## Contexto
+
+- Sistemas em paralelo aumentam a confiabilidade
+- Redundância em setores críticos:
+  - Energia elétrica
+  - Servidores de internet  
+  - Sistemas de transporte
+  - Processos industriais
+
+## Objetivo do Projeto
+
+- Modelar sistema com 2 componentes idênticos em paralelo
+- Analisar falhas (p) e reparos (q) como cadeia de Markov
+- Simular dinâmica do sistema em R
+- Estudar confiabilidade do sistema
+
+
+# Modelagem do Sistema
+
+## Estados do Sistema
+- **Estado 2**: Ambos componentes funcionando
+- **Estado 1**: Um funcionando, um falhado  
+- **Estado 0**: Ambos falhados
+
+## Probabilidades de Transição
+
+- **p**: Probabilidade de falha (componente funcionando)
+- **q**: Probabilidade de reparo (componente falhado)
+
+
+# Matriz de Transição
+
+## Cálculo das Probabilidades
+
+**Do estado 2:**
+- Permanecer em 2: `(1-p)²`
+- Ir para 1: `2p(1-p)`
+- Ir para 0: `p²`
+
+**Do estado 1:**
+- Ir para 2: `(1-p)q`
+- Permanecer em 1: `pq + (1-p)(1-q)`
+- Ir para 0: `p(1-q)`
+
+**Do estado 0:**
+- Ir para 2: `q²`
+- Ir para 1: `2q(1-q)`
+- Permanecer em 0: `(1-q)²`
+
+## Matriz Resultante
+
+$$
+P = \begin{pmatrix} 
+(1-p)^2 & 2p(1-p) & p^2 \\ 
+(1-p)q & pq + (1-p)(1-q) & (1-q)p \\ 
+q^2 & 2q(1-q) & (1-q)^2 \end{pmatrix} 
+$$
+
+
+
+
