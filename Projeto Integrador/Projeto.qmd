@@ -2,6 +2,7 @@
 format:
     revealjs:
         theme: moon
+        incremental: true
 lang: pt
 title: Processos Estocátiscos I
 subtitle: "Confiabilidade de Sistemas: Falhas e Reparo"
@@ -74,11 +75,69 @@ cache: false
 
 $$
 P = \begin{pmatrix} 
-(1-p)^2 & 2p(1-p) & p^2 \\ 
-(1-p)q & pq + (1-p)(1-q) & (1-q)p \\ 
-q^2 & 2q(1-q) & (1-q)^2 \end{pmatrix} 
+(1-q)^2 & 2q(1-q) & q²\\
+p(1-q) & pq + (1-p)(1-q) & (1-p)q\\
+p² & 2p(1-p) & (1-p)²
+\end{pmatrix} 
 $$
 
+## Verificando a validade da matriz
+
+- Uma matriz de transição é válida se satisfaz as duas propriedades fundamentais:
+
+  1. $P(x,y) \geq 0, \hspace{5mm} \forall x,y \in \mathcal{S}$.
+
+  2. $\displaystyle \sum_{y \in \mathcal{S}}P(x,y) = 1, \hspace{5mm} x \in \mathcal{S}$.
 
 
+## Verificando a validade da matriz
 
+- Soma na linha 1 da matriz:
+  \begin{align*}
+    (1-q)^2 + 2q(1-q) + q^2
+    &= (1-q)[(1-q) + 2q] + q^2\\
+    &= (1-q)(1+q) + q^2\\
+    &= 1 - q^2 + q^2\\
+    &= 1.
+  \end{align*}
+
+
+## Verificando a validade da matriz {.smaller}
+
+- Soma na linha 2 da matriz:
+  \begin{align*}
+    p(1-q) + pq + (1-p)(1-q) + (1-p)q
+    &= p - pq + pq + (1-p)[(1-q) + q]\\
+    &= p + (1-p)[1 - q + q]\\
+    &= p + (1-p)\\
+    &= p + 1 - p\\
+    &= 1.
+  \end{align*}
+
+## Verificando a validade da matriz
+
+- Soma na linha 3 da matriz:
+  \begin{align*}
+    p^2 + 2p(1-p) + (1-p)^2
+    &= p^2 + 2p - 2p^2 + 1 - 2p + p^2\\
+    &= 2p^2 - 2p^2 + 2p - 2p + 1\\
+    &= 1.
+  \end{align*}
+
+## Classificação dos estados
+
+::: {.nonincremental}
+
+- A matriz indicadora dessa cadeia corresponde a matriz de uma cadeia markoviana irredutível:
+
+$$
+\mathcal{I} = \begin{pmatrix} 
++ & + & +\\
++ & + & +\\
++ & + & +
+\end{pmatrix}
+$$
+
+- Como o espaço de estados é finito então todos os estados da cadeia $\mathcal{S} = \{0,1,2\}$ são de recorrência positiva.
+
+:::
