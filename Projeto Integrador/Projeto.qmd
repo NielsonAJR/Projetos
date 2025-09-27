@@ -141,3 +141,213 @@ $$
 - Como o espaço de estados é finito então todos os estados da cadeia $\mathcal{S} = \{0,1,2\}$ são de recorrência positiva.
 
 :::
+
+## Determinando a distribuição estacionária
+
+- Uma cadeia de Markov de recorrência positiva e irredutível (como a nossa) possui uma
+  única distribuição estacionária $\pi$.
+
+- Podemos obter essa distribuição de alguma maneira...
+
+
+# Simulação
+
+## Simulando a cadeia
+
+- Agora vamos realizar a implementação de uma simulação da cadeia desse sistema no R.
+
+- Partindo do estado 2, simularemos 1000 etapas da cadeia e iremos comparar as proporções dos tempos
+  em que cadeia permance em cada estado com a distribuição estacionária.
+
+
+## Escolha de p e q
+
+Para a simulação que vem logo a seguir, os valores de $p$ e $q$ são escolhidos de forma arbitrária considerando os seguintes pontos:
+
+```{r}
+#| echo: true
+p <- 1 - 0.65
+q <- 1 - 0.35
+```
+
+- A probabilidade de um componente continuar funcionando será de `r (1 - p)*100`%, ou seja,
+  a probabilidade de falha quando o componente estiver funcionando será de
+  $$1 - p = `r 1 - p` \Leftrightarrow p = `r p`.$$
+
+## Escolha de p e q
+
+::: {.nonincremental}
+
+Para a simulação que vem logo a seguir, os valores de $p$ e $q$ são escolhidos de forma arbitrária considerando os seguintes pontos:
+
+```{r}
+#| echo: true
+p <- 1 - 0.65
+q <- 1 - 0.35
+```
+
+- A probabilidade de um componente continuar falhado (quebrado) será de `r (1 - q)*100`%, ou seja,
+  a probabilidade de reparo quando o componente estiver quebrado será
+  $$1 - q = `r 1 - q` \Leftrightarrow q = `r q`.$$
+
+:::
+
+## Algoritmo da simulação
+
+```{r}
+#| echo: true
+
+library("tidyverse")
+library("gt")
+
+matrix_pot <- function(M, n){
+  # Verificacao de pressupostos.
+  # Matriz quadrada.
+  if(dim(M)[1] != dim(M)[2]){
+    print("Erro! A matriz nao quadrada.") # Avisa sobre o erro.
+    return(M * 0) # Retorna uma matriz nula para chamar atenção.
+  }
+  # Com entradas nao negativas.
+  if(any(M < 0)){
+    return("Erro! A matriz possui alguma entrada negativa.") # Avisa sobre o erro.
+    print(M * 0) # Retorna uma matriz nula para chamar atenção.
+  }
+  # A soma nas linhas deve ser igual a 1.
+  if(any(abs(apply(M, 1, sum) - 1) > 1e-09)){
+    print("Erro! Alguma linha na matriz nao soma 1.") # Avisa sobre o error.
+    return(M * 0) # Retorna uma matriz nula para chamar atenção.
+  }
+  x <- diag(dim(M)[1])
+  while(n){
+    x <- x %*% M
+    n <- n - 1
+  }
+  return(x)
+}
+
+simula_cadeia <- function(S, P, pi0, n){
+  # Simula uma cadeia de Markov.
+  #
+  # Parâmetros de entrada:
+  #
+  ## S: espaco de estados finito de onde obteremos os estados indexados nas linhas e colunas da matriz de transição.
+  ## P: matriz de transicao.
+  ## pi0: vetor de probabilidades dos estados S.
+  ## n: número de etapas a serem realizadas.
+
+  
+  # Gerar X0 com distribuicao pi0 e armazenar no vetor x.
+  x <- numeric(n + 1)
+  x[1] <- sample(S,size = 1, prob = pi0)
+  
+  # Gerar os estados das próximas etapas.
+  for(i in 1:n){
+    j <- match(x[i], S) # pega o índice do estado atual.
+    p <- P[j,] # pega a função de transição para o estado da etapa presente.
+    x[i+1] <- sample(S, size = 1, prob = p) # obter estado da proxima etapa.
+  }
+  return(x)
+}
+
+## Aplicação
+
+# Já obtidos anteriormente.
+p <- p # probabilidade de falha
+q <- q # probabilidade de reparo
+
+# Número de realizações
+N <- 1000
+
+P <- matrix(
+  c(
+    (1-q)**2, 2*q*(1-q), q**2,
+    p*(1-q), p*q + (1-p)*(1-q), (1-p)*q,
+    p**2, 2*p*(1-p), (1-p)**2
+  ), byrow = TRUE, nrow = 3
+)
+
+# Fixar semente.
+set.seed(123)
+
+# Espaço de estados e  distribuição inicial.
+S <- c(0,1,2)
+pi0 <- c(0,0,1)
+
+# Simular a cadeia.
+cadeia <- simula_cadeia(S, P, pi0, N)[-1]
+
+cadeia_tbl <- tibble(etapa = 1:length(cadeia), estado = cadeia) |>
+  arrange(etapa)
+
+tabela_resultados <- cadeia_tbl |>
+  group_by(estado) |>
+  count() |>
+  mutate(freq = n/N) |>
+  gt(groupname_col = FALSE) |>
+  tab_header(paste("Simulação: número de visitas a cada estado para", N, "etapas")) |>
+  cols_label(
+    estado  = "Estado",
+    n = "Número de visitas",
+    freq = "Proporção de visitas"
+  )
+```
+
+
+## Resultados
+
+- Podemos observar que a tabela com os resultados da simulação
+apresenta resultados compatíveis com a distribuição estacionária limite obtida de forma numérica.
+
+## Resultados
+
+::: {.nonincremental}
+
+- Podemos observar que a tabela com os resultados da simulação
+apresenta resultados compatíveis com a distribuição estacionária limite obtida de forma numérica.
+
+```{r}
+#| echo: true
+tabela_resultados
+M <- P; rownames(M) <- S; colnames(M) <- S; matrix_pot(M, 999);
+```
+
+:::
+
+# Análise
+
+## Discussão
+
+- De acordo com os resultados da simulação anterior,
+  a frequência de visitas aos estados em que o sistema está em operação (1 e 2) é bem maior que se comparada à
+  frequência do estado em que o sistema está inoperante.
+
+- Isto se deve ao fato de que especificamos uma alta probabilidade
+  do sistema se manter em funcionamento (`r (1 - p)*100`%) e uma baixa probabilidade do sistema permanecer inoperante (`r (1 - q)*100`%).
+
+## Discussão
+
+::: {.nonincremental}
+
+- Isso significa que o sistema é robusto e confiável. Sendo ideal em cenários onde a estabilidade e qualidade são aspectos essenciais,
+  como geradores de hospitais, linhas de produção numa fábrica automotiva, provedores de internet que servem grandes centros, dentre outros exemplos.
+
+:::
+
+## Confiabilidade
+
+- Os valores de $p$ e $q$ impactarão diretamente na qualidade e robustez do sistema como um todo. Podemos classificar o sistema de
+  acordo com 2 parâmetros: sua probabilidade de permanecer em funcionamento e sua probabilidade de ser reparado.
+
+## Confiabilidade {.smaller}
+
+- De forma geral, um sistema deste tipo pode ser classificado como:
+    - Excelente: apresenta uma alta probabilidade de permancer em funcionamento $(1 - p)$ e uma alta probabilidade de ser reparado;
+    - Robusto: apresenta uma alta probabilidade de permancer em funcionamento $(1 - p)$ e uma probabilidade razoável de ser reparado;
+    - Bom: apresenta uma probabilidade razoável de permancer em funcionamento $(1 - p)$ e uma probabilidade razoável de ser reparado;
+    - instável: apresenta uma probabilidade baixa de permancer em funcionamento $(1 - p)$ e uma probabilidade razoável de ser reparado;
+    - não confiável: apresenta uma probabilidade baixa de permancer em funcionamento $(1 - p)$ e uma probabilidade baixa de ser reparado.
+
+
+## Impactos de uma probabilidade reparo nula
+
+- Insira o conteúdo aqui...
