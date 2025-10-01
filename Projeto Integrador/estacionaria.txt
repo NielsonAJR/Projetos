@@ -1,23 +1,77 @@
-(1 - q)²π₀ + p(1 - q)π₁ + p²π₂ = π₀;
-2q(1 - q)π₀ + pqπ₁ + (1 - p)(1 - q)π₁ + 2p(1 - p)π₂ = π₁;
-q²π₀ + (1 - p)qπ₁ + (1 - p)²π₂ = π₂;
-
-
-L₁ + L₂:
-
-(1 - q)π₀(1 - q + 2q) + pqπ₁ + (1 - q)π₁(p + 1 - p) + π₂(p² + 2p - 2p²) = π₀ + π₁;
-(1 - q²)π₀ + pqπ₁ + (1 - q)π₁ + π₂(2p - p²) = π₀ + π₁;
-π₀ - q²π₀ + (1 + pq - q)π₁ + π₂(2p - p²) = π₀ + π₁;
-π₀ - q²π₀ + π₁ + (p - 1)qπ₁ + π₂(2p - p²) = π₀ + π₁;
-
 
 (1 - q)²π₀ + p(1 - q)π₁ + p²π₂ = π₀;
-π₀ - q²π₀ + π₁ + (p - 1)qπ₁ + π₂(2p - p²) = π₀ + π₁;
+2q(1 - q)π₀ + (pq + (1 - p)(1 - q))π₁ + 2p(1 - p)π₂ = π₁;
 q²π₀ + (1 - p)qπ₁ + (1 - p)²π₂ = π₂;
+π₀ + π₁ + π₂ = 1
 
 
+De L1:
 
-L₂ + L₃:
+π₀​[1−(1−q)²] = π₁​p(1−q) + π₂p²
 
-π₀ + π₂[1 - 2p + p² + 2p - p²] = 1;
-π₀ + π₁ + π₂ = 1;
+De L3:
+
+π₂​[1−(1−p)²] = π₀​q² + π₁​(1−p)q
+π₀​q² = - π₁​(1−p)q + π₂​[1−(1−p)²]
+
+Denominando:
+
+A = 1−(1−q)² = 2q−q²
+B = p(1−q)
+C = p²
+D = 1−(1−p)² = 2p−p²
+E = q(1-p)
+F = q²
+
+Tem-se então o sistema:
+
+Bπ₁ + Cπ₂ =   Aπ₀
+Eπ₁ - Dπ₂ = - Fπ₀
+
+Resolvendo por soma:
+
+(BD)π₁ + (CD)π₂ =   (AD)π₀
+(CE)π₁ - (CD)π₂ = - (CF)π₀
+
+Somando as equações:
+
+(BD + CE)π₁ = (AD - CF)π₀
+
+BD + CE = p(1−q)(2p−p²) + (1−p)qp² = p²((1−q)(2−p) + q(1−p)) = p²(2−p−q)
+AD - CF = (2q−q²)(2p−p²) - p²q² = 2pq(2−p−q)
+
+Logo:
+
+π₁ = (AD - CF)π₀/(BD + CE) = (2q/p) * π₀
+
+Substituindo na primeira equação:
+
+Cπ₂ = p²π₂ = Aπ₀ - Bπ₁ = [A - 2Bq/p]π₀ = [2q−q² - 2p(1−q)q/p]π₀ = [2q−q² - 2(1−q)q]π₀ =
+= [2q−q² - 2q + 2q²]π₀ = q²π₀
+
+Logo: 
+
+π₂ = (q²/p²)π₀
+
+Como π₀ + π₁ + π₂ = 1:
+
+π₀(1 + (2q/p) + (q²/p²)) = 1
+π₀(1 + (2qp/p²) + (q²/p²)) = 1
+π₀(1 + = (p+q)²/p² - p²/p²) = 1
+π₀​((p+q)²/p²​) = 1
+
+π₀ = p²/​(p+q)²
+π₁ = 2q/p * p²/​(p+q)² = 2pq/​(p+q)²
+π₂ = (q²/p²) * p²/​(p+q)² = q²/​(p+q)²
+
+É fácil verificar que:
+
+(p² + 2pq + q²)/(p+q)² = (p+q)²/(p+q)² = 1
+
+Comparando-se com os valores encontrados na simulação, adotando-se p = 0.35 e q = 0.65
+
+Analiticamente:
+
+π = (0,1225, 0.4550, 0.4225)
+
+Computacionalmente os valores coincidem.

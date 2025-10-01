@@ -147,8 +147,87 @@ $$
 - Uma cadeia de Markov de recorrência positiva e irredutível (como a nossa) possui uma
   única distribuição estacionária $\pi$.
 
-- Podemos obter essa distribuição de alguma maneira...
+- Além disso, satisfeitas as condições $0 < p < 1$ e $0 < q < 1$ a cadeia é aperiódica,e portanto **ergódica**. Logo, a distribuição estacionária existe e é igual a distribuição limite da cadeia.
 
+- Podemos obter essa distribuição em função de $p$ e $q$ ao resolver o sistema de equações resultantes de $\pi = \pi P$.
+
+## Determinando a distribuição estacionária
+
+$$
+\begin{cases}
+(1 - q)^{2}\pi_{0} + p(1 - q)\pi_{1} + p^{2}\pi_{2} = \pi_{0} \\
+2q(1 - q)\pi_{0} + (pq + (1 - p)(1 - q))\pi_{1} + 2p(1 - p)\pi_{2} = \pi_{1} \\
+q^{2}\pi_{0} + (1 - p)\pi_{1} + (1 - p)^{2}\pi_{2} = \pi_{2} \\
+\pi_{0} + \pi_{1} + \pi_{2} = 1
+\end{cases}
+$$
+
+## Determinando a distribuição estacionária
+
+- De L1 e L3, respectivamente:
+
+$$
+\begin{cases}
+\pi_{0}​[1−(1−q)^{2}] = \pi_{1}​p(1−q) + \pi_{2}p^{2}\\
+\pi_{2}​[1−(1−p)^{2}] = \pi_{0}​q^{2} + \pi_{1}​(1−p)q \\
+\pi_{0} + \pi_{1} + \pi_{2} = 1
+\end{cases}
+$$
+
+## Determinando a distribuição estacionária
+
+- Arranjando os termos:
+
+$$
+\begin{cases}
+\pi_{0}​[1−(1−q)^{2}] = \pi_{1}​p(1−q) + \pi_{2}p^{2}\\
+- \pi_{0}​q^{2} = \pi_{1}​(1−p)q - \pi_{2}​[1−(1−p)^{2}]\\
+\pi_{0} + \pi_{1} + \pi_{2} = 1
+\end{cases}
+$$
+
+## Determinando a distribuição estacionária
+
+- Defina:
+
+$$
+\begin{cases}
+A = 1−(1−q)^{2} = 2q−q^{2} \\
+B = p(1−q) \\
+C = p^{2} \\
+D = 1−(1−p)^{2} = 2p−p^{2} \\
+E = q(1-p) \\
+F = q^{2} 
+\end{cases}
+$$
+
+## Determinando a distribuição estacionária
+
+- Tem-se então o sistema:
+
+$$
+\begin{cases}
+B\pi_{1} + C\pi_{2} =   A\pi_{0} \\
+E\pi_{1} - D\pi_{2} = - F\pi_{0} \\
+\pi_{0} + \pi_{1} + \pi_{2} = 1
+\end{cases}
+$$
+
+## Determinando a distribuição estacionária
+
+- Um caminho para resolver o sistema seria multiplicando-se L1 por D, L2 por C e somando as equações. Com o auxilio de L3, por fim, obtém-se:
+
+$$
+\begin{cases}
+\pi_{0} = \frac{p^{2}}{(p+q)^{2}} \\[6pt]
+\pi_{1} = \frac{2q}{p} \cdot \frac{p^{2}}{(p+q)^{2}} = \frac{2pq}{(p+q)^{2}} \\[6pt]
+\pi_{2} = \frac{q^{2}}{p^{2}} \cdot \frac{p^{2}}{(p+q)^{2}} = \frac{q^{2}}{(p+q)^{2}}
+\end{cases}
+$$
+
+## Determinando a distribuição estacionária
+
+- Observa-se que $\pi_{0} + \pi_{1} + \pi_{2} = \frac{p² + 2pq + q²}{(p+q)²} = \frac{(p+q)²}{(p+q)²} = 1$
 
 # Simulação
 
@@ -313,6 +392,18 @@ M <- P; rownames(M) <- S; colnames(M) <- S; matrix_pot(M, 999);
 
 :::
 
+## Resultados
+
+- Além disso, verifica-se que a distribuição estacionária e limite obtida computacionalmente coincide com a obtida analiticamente. Com $p = 0.35$ e $q = 0.65$ tem-se:
+
+$$
+\begin{cases}
+\pi_{0} = \frac{p^{2}}{(p+q)^{2}} = \frac{0.35^{2}}{1^{2}} = 0.1225 \\
+\pi_{1} = \frac{2q}{p} \cdot \frac{p^{2}}{(p+q)^{2}} = \frac{2pq}{(p+q)^{2}} = \frac{2 \cdot 0.35 \cdot 0.65}{1^{2}} = 0.4550\\
+\pi_{2} = \frac{q^{2}}{p^{2}} \cdot \frac{p^{2}}{(p+q)^{2}} = \frac{q^{2}}{(p+q)^{2}} = \frac{0.65^{2}}{1^{2}} = 0.4225
+\end{cases}
+$$
+
 # Análise
 
 ## Discussão
@@ -335,19 +426,122 @@ M <- P; rownames(M) <- S; colnames(M) <- S; matrix_pot(M, 999);
 
 ## Confiabilidade
 
-- Os valores de $p$ e $q$ impactarão diretamente na qualidade e robustez do sistema como um todo. Podemos classificar o sistema de
-  acordo com 2 parâmetros: sua probabilidade de permanecer em funcionamento e sua probabilidade de ser reparado.
+- Os valores de $p$ e $q$ impactarão diretamente na qualidade e robustez do sistema como um todo. 
+
+- Analisando-se uma máquina isolada (vide exemplo em aula de cadeia com dois estados), tem-se que a disponibilidade $a$ de uma máquina no n-ésimo estado, isto é, $P(X_{n} = 1)$ é dada por $a = \frac{q}{p+q}$
+
+- Ou seja, em regime estacionário, o número de máquinas funcionando segue uma distribuição $Binomial(2, a)$, e portanto o número esperado de máquinas em funcionamento é $2a$.
+
 
 ## Confiabilidade {.smaller}
 
-- De forma geral, um sistema deste tipo pode ser classificado como:
-    - Excelente: apresenta uma alta probabilidade de permancer em funcionamento $(1 - p)$ e uma alta probabilidade de ser reparado;
-    - Robusto: apresenta uma alta probabilidade de permancer em funcionamento $(1 - p)$ e uma probabilidade razoável de ser reparado;
-    - Bom: apresenta uma probabilidade razoável de permancer em funcionamento $(1 - p)$ e uma probabilidade razoável de ser reparado;
-    - instável: apresenta uma probabilidade baixa de permancer em funcionamento $(1 - p)$ e uma probabilidade razoável de ser reparado;
-    - não confiável: apresenta uma probabilidade baixa de permancer em funcionamento $(1 - p)$ e uma probabilidade baixa de ser reparado.
-
+- Podemos observar então o impacto direto de $p$ e $q$ na disponibilidade do sistema:
+    - Valores elevados de $p$ reduzem o número esperado de máquinas em funcionamento;
+    - Reduzir consideravelmente $p$ torna o sistema bastante robusto, pois qualquer valor de $q$ maior que $p$ faz com que o número esperado de máquinas disponíveis seja maior que 1, pois $2q > p + q$ nesse caso;
+    - Esta pode ser considerada uma condição de viabilidade do sistema, pois do contrário o número esperado de máquinas em funcionamento é menor que 1;
+    - Valores consideravelmente altos de $q$, próximos a 1 também geram boa disponibilidade do sistema, mas seriam tecnicamente mais caros de manter;
+    - O caso ideal é manter $q$ elevado e $p$ baixo, para a disponibilidade esperada ser próxima de 2;
+    - Observa-se a extrema importância de redundância em sistemas críticos, pois a probabilidade de haver pelo menos uma máquina funcionando é $1 - (1-a)^{2} > a$ quando $0 < a < 1$.
 
 ## Impactos de uma probabilidade reparo nula
 
-- Insira o conteúdo aqui...
+- Em um cenário hipotético em que $q = 0$ a matriz de transição da cadeia se torna:
+
+$$
+P = \begin{pmatrix} 
+1 & 0 & 0\\
+p & (1-p) & 0\\
+p² & 2p(1-p) & (1-p)²
+\end{pmatrix} 
+$$
+
+- Neste caso a cadeia é redutível, com o estado 0 absorvente e os demais estados transientes, portanto inevitavelmente as duas máquinas permanecerão quebradas em um n-ésimo tempo;
+
+## Impactos de uma probabilidade reparo nula
+
+- Reordenando a matriz na forma canônica:
+
+$$
+P = \begin{pmatrix} 
+1-p & 0 & p\\
+2p(1-p) & (1-p)^{2} & p^{2}\\
+0 & 0 & 1
+\end{pmatrix} 
+$$
+
+- Logo:
+
+$$
+Q = \begin{pmatrix} 
+1-p & 0 \\
+2p(1-p) & (1-p)^{2}
+\end{pmatrix} 
+$$
+
+e
+
+$$
+R = \begin{pmatrix} 
+p\\
+p^{2}
+\end{pmatrix} 
+$$
+
+## Impactos de uma probabilidade reparo nula
+
+- Calculando-se a matriz fundamental $N = (I - Q)^{-1}$
+
+$$
+(I-Q) = \begin{pmatrix} 
+p & 0 \\
+-2p(1-p) & p(2-p)
+\end{pmatrix} 
+$$
+
+$$
+N = \begin{pmatrix} 
+\frac{1}{p} & 0 \\
+\frac{2(1-p)}{p(2-p)} & \frac{1}{p(2-p)}
+\end{pmatrix} 
+$$
+
+- Portanto o tempo médio de absorção partindo de cada esteado é dado por:
+
+$$
+R = \begin{pmatrix} 
+\frac{1}{p}\\
+\frac{3-2p}{p(2-p)}
+\end{pmatrix} 
+$$
+
+## Impactos de uma probabilidade reparo nula
+
+- Observa-se que caso o sistema inicie com apenas uma máquina funcionando, o tempo médio de falha é geométrico $\frac{1}{p}$;
+
+- Em ambos os casos, se $p$ se aproxima de 1, o sistema tende a ficar inoperante em um passo;
+
+- Podemos analisar um grafico com os tempos médios de falha total para diferentes valores de $p$, considerando-se o estado inicial 2.
+
+## Impactos de uma probabilidade reparo nula
+
+```{r, include=TRUE}
+library(ggplot2)
+
+p <- seq(0.01, 1, by = 0.01)
+t <- (3-2*p)/(p*(2-p))
+df <- data.frame(p=p, t=t)
+
+df |> 
+  ggplot(
+    aes(x = t, y = p)
+  ) +
+
+  geom_line() +
+  labs(
+    x = "Tempo médio de falha total",
+    y = "p"
+  ) +
+
+  theme_minimal()
+
+```

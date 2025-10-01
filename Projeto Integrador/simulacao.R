@@ -1,4 +1,10 @@
+# pacotes
+  # pacotes
+  library(tibble)
+  library(tidyverse)
+
 matrix_pot <- function(M, n){
+  
   # Verificacao de pressupostos.
   # Matriz quadrada.
   if(dim(M)[1] != dim(M)[2]){
@@ -62,7 +68,6 @@ P <- matrix(
 )
 P
 
-library("tidyverse")
 set.seed(123)
 S <- c(0,1,2)
 pi0 <- c(0,0,1)
